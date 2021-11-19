@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.conf import settings
+from django.db.models.fields import related
 # Create your models here.
 # id는 자동으로 만들어짐
 
@@ -21,5 +22,13 @@ class Movie(models.Model):
     actor = models.CharField(max_length=200, blank=True)
     overview = models.CharField(max_length=500)
     line = models.CharField(max_length=500, blank=True)
-    genre = models.ManyToManyField(Genre)
+    genres = models.ManyToManyField(Genre)
     # keywords = models.ManyToManyField(Keyword)
+
+class Review(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    rank = models.FloatField()
+    content = models.TextField()
+    updated_at = models.DateTimeField(auto_now=True)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews')

@@ -32,7 +32,7 @@ for page in range(1, 15):
                 "director" : "",
                 "overview" : movie.get("overview"),
                 "line" : "",
-                "genre" : movie.get("genre_ids"),
+                "genres" : movie.get("genre_ids"),
             }
         }
         result.append(movie_dict)
