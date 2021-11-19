@@ -7,11 +7,12 @@ def add_movie():
     request_url = tmdb_helper.get_request_url(language = 'ko', region ='KR')
     movies_json = requests.get(request_url).json()
     movies = movies_json['results']
-    movies_overEight = []
     for movie in movies:
-        if movie['vote_average'] >= 8:
-            movies_overEight.append(movie)
+        movie_id = movie['id']
+        request_url = tmdb_helper.get_request_url(f'/movie/{movie_id}/keywords')
+        keywords_json = requests.get(request_url).json()
+        movie['keywords'] = keywords_json['keywords']
+    return movies
 
-    return movies_overEight
 
 

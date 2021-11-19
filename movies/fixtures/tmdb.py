@@ -4,7 +4,7 @@ class TMDBHelper:
     def __init__(self, api_key=None):
         self.api_key = api_key
     
-    def get_request_url(self, method='/movie/popular', **kwargs):
+    def get_request_url(self, method='/movie/top_rated', **kwargs):
         base_url = 'https://api.themoviedb.org/3'
         request_url = base_url + method
         request_url += f'?api_key={self.api_key}'
