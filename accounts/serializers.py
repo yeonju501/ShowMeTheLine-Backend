@@ -9,3 +9,16 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('username', 'password')
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class FollowSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = get_user_model()
+            fields = '__all__'
+    
+    followings = FollowSerializer(many=True, read_only=True)
+    followers = FollowSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'followings', 'followers')

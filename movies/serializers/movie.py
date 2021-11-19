@@ -2,7 +2,6 @@ from rest_framework import fields, serializers
 from ..models import Genre, Movie
 
 class MovieListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Movie
         fields = ('id', 'title', 'poster_path')
