@@ -14,13 +14,38 @@ class TMDBHelper:
         
         return request_url
     
-    def get_movie_id(self, title):
-        request_url = self.get_request_url('/search/movie', query=title, region='KR', language='ko')
+    def get_movie_duration(self, id):
+        request_url = f'https://api.themoviedb.org/3/movie/{id}'
+        request_url += f'?api_key={self.api_key}'+ '&region=KR&language=ko'
         data = requests.get(request_url).json()
-        results = data.get('results')
-        if results:
-            movie = results[0]
-            movie_id = movie['id']
-            return movie_id
-        else:
-            return None
+        duration = int(data.get('runtime'))
+        return duration
+    
+    def get_actors_director(self, id):
+        request_url = f'https://api.themoviedb.org/3/movie/{id}/credits'
+        request_url += f'?api_key={self.api_key}'+ '&region=KR&language=ko'
+        data = requests.get(request_url).json()
+        director = ''
+        actors = []
+
+        for p in data.get('cast'):
+            if p.get('job') == 'Director' and not director:
+                director = p.get('name')
+            if p['known_for_department'] =='Acting' and len(actors) < 5:
+                actors.append(p.get('name'))
+            if len(actors) == 5 and director:
+                actors_str = ', '.join(actors)
+                return director, actors_str
+
+        for p in data.get('crew'):
+            if p.get('job') == 'Director' and not director:
+                director = p.get('name')
+            if p['known_for_department'] =='Acting' and len(actors) < 5:
+                actors.append(p.get('name'))
+            if len(actors) == 5 and director:
+                actors_str = ', '.join(actors)
+                return director, actors_str
+
+        actors_str = ', '.join(actors)
+        return director, actors
+            

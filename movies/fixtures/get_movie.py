@@ -11,25 +11,28 @@ from tmdb import TMDBHelper
 result = []
 tmdb_helper = TMDBHelper('de3308aff80fcad45743238dc9bd4d0d')
 request_url = tmdb_helper.get_request_url(language = 'ko', region ='KR')
-for page in range(1, 15):
+for page in range(1, 25):
     URL = request_url + f'&page={page}'
     raw_data = requests.get(URL).json()
     data = raw_data.get('results')
     for movie in data:
       if movie.get("original_language") == "ko" or movie.get("original_language") == "en": 
+        movie_id = movie.get("id")
+        duration = tmdb_helper.get_movie_duration(movie_id)
+        director, actors = tmdb_helper.get_actors_director(movie_id)
         movie_dict = {
             "model" : "movies.movie",
-            "pk" : movie.get("id"),
+            "pk" : movie_id,
             "fields" : {
                 "title" : movie.get("title"),
-                "duration" : 0,
+                "duration" : duration,
                 "release_date" : movie.get("release_date"),
                 "popularity" : movie.get("popularity"),
                 "vote_average" : movie.get("vote_average"),
                 "poster_path" : movie.get("poster_path"),
                 "backdrop_path" : movie.get("backdrop_path"),
-                "actor" : "",
-                "director" : "",
+                "actor" : actors,
+                "director" : director,
                 "overview" : movie.get("overview"),
                 "line" : "",
                 "genres" : movie.get("genre_ids"),
