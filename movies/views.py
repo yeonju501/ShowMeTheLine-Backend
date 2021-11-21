@@ -18,7 +18,7 @@ def movie_list(request):
 def bestFive(request):
     movies = Movie.objects.all().order_by('-vote_average')[:20]
     # print(movies)
-    serializer = MovieSerializer(movies, many=True)
+    serializer = MovieListSerializer(movies, many=True)
     return Response(serializer.data)
 
 
