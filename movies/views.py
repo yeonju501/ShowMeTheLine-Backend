@@ -4,7 +4,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers.review import ReviewSerializer
 from .serializers.movie import MovieSerializer, MovieListSerializer
-from movies.models import Movie, Review
+from movies.models import Genre, Movie, Review
+import random
 # Create your views here.
 
 @api_view(['GET'])
@@ -56,3 +57,42 @@ def review_update_delete(request, review_pk):
     elif request.method == 'DELETE':
         review.delete()
         return Response({'id': review_pk}, status=status.HTTP_204_NO_CONTENT)
+
+# 메인 페이지 추천
+
+@api_view(['GET'])
+def line_recommend(request):
+    genres = Genre.objects.all()
+    movies = []
+    for genre in genres:
+        movie = genre.movie_set.all().order_by('?').first()
+        movies.append(movie)
+    serializer = MovieListSerializer(movies, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def line_recommend_result(request):
+    # list
+    movie_ids = request.data.ids
+    genres_picked = []
+    for id in movie_ids:
+        movie = get_object_or_404(Movie, pk=id)
+        gs = movie.genres.values('id')
+        for g in gs:
+            genres_picked.append(gs['id'])
+    result_genres = random.randrange(genres_picked, 4)
+    movies = []
+    for g in result_genres:
+        genre = Genre.objects.filter(id=g)
+        movie = genre.movie_set.all().order_by('?').first()
+        movies.append(movie)
+    serializer = MovieListSerializer(movies, many=True)
+    return Response(serializer.data)
+    
+
+
+
+    
+
+
+

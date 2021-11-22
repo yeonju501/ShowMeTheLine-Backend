@@ -36,13 +36,6 @@
     },
     {
         "model": "movies.genre",
-        "pk": 99,
-        "fields": {
-            "name": "다큐멘터리"
-        }
-    },
-    {
-        "model": "movies.genre",
         "pk": 18,
         "fields": {
             "name": "드라마"
@@ -106,13 +99,6 @@
     },
     {
         "model": "movies.genre",
-        "pk": 10770,
-        "fields": {
-            "name": "TV 영화"
-        }
-    },
-    {
-        "model": "movies.genre",
         "pk": 53,
         "fields": {
             "name": "스릴러"
@@ -123,13 +109,6 @@
         "pk": 10752,
         "fields": {
             "name": "전쟁"
-        }
-    },
-    {
-        "model": "movies.genre",
-        "pk": 37,
-        "fields": {
-            "name": "서부"
         }
     }
 ]

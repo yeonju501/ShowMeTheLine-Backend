@@ -23,7 +23,7 @@ class Movie(models.Model):
     overview = models.CharField(max_length=500)
     line = models.CharField(max_length=500, blank=True)
     genres = models.ManyToManyField(Genre)
-    # keywords = models.ManyToManyField(Keyword)
+
 
 class Review(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
