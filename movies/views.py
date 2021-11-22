@@ -38,8 +38,9 @@ def review_list_create(request, movie_pk):
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = ReviewSerializer(data=request.data)
+        movie = get_object_or_404(Movie, pk=movie_pk)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(user=request.user)
+            serializer.save(user=request.user, movie=movie, rank=0)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['PUT', 'DELETE'])
