@@ -42,17 +42,20 @@ def review_list_create(request, movie_pk):
         serializer = ReviewSerializer(data=request.data)
         movie = get_object_or_404(Movie, pk=movie_pk)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(user=request.user, movie=movie, rank=0)
+            serializer.save(user=request.user, movie=movie)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-@api_view(['PUT', 'DELETE'])
-def review_update_delete(request, review_pk):
+@api_view(['GET', 'PUT', 'DELETE'])
+def review_update_delete(request, movie_pk, review_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
     review = get_object_or_404(Review, pk=review_pk)
-    if not request.user.review_set.filter(pk=review_pk).exist():
+    if not request.user.review_set.filter(pk=review_pk).exists():
         return Response({'detail':'권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
-    
-    if request.method == 'PUT':
-        serializer = ReviewSerializer(Review, data=request.data)
+    if request.method == 'GET':
+        serializer = ReviewSerializer(review)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ReviewSerializer(review, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
