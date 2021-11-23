@@ -1,17 +1,19 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, render
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers.review import ReviewSerializer
 from .serializers.movie import MovieSerializer, MovieListSerializer
 from movies.models import Genre, Movie, Review
+from django.core import serializers
+from django.core.paginator import Paginator
 import random
 # Create your views here.
 
 @api_view(['GET'])
 def movie_list(request):
     # 목록 불러오기
-    movies = Movie.objects.all()
+    movies = Movie.objects.all().order_by('-popularity')
     serializer = MovieListSerializer(movies, many=True)
     return Response(serializer.data)
 
