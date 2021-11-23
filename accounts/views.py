@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializers import UserSerializer
+
+from movies.models import Movie
+from .serializers import LikeSerializer, UserSerializer
 from rest_framework.permissions import AllowAny
 
 # Create your views here.
@@ -23,3 +25,15 @@ def signup(request):
         user.set_password(request.data.get('password'))
         user.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def like_movie_list_create(request):
+    if request.method == 'GET':
+        movies = request.user.liked_movies.all().order_by('-popularity')
+        serializer = LikeSerializer(user=request.user, liked_movies=movies)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = LikeSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
