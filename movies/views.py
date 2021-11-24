@@ -89,18 +89,18 @@ def line_recommend(request):
 @api_view(['POST'])
 def line_recommend_result(request):
     # list
-    movie_ids = request.data.ids
+    movie_ids = request.data
     genres_picked = []
     for id in movie_ids:
         movie = get_object_or_404(Movie, pk=id)
         gs = movie.genres.values('id')
         for g in gs:
-            genres_picked.append(gs['id'])
-    result_genres = random.randrange(genres_picked, 4)
+            genres_picked.append(g['id'])
+    result_genres = random.sample(genres_picked, 4)
     movies = []
     for g in result_genres:
         genre = Genre.objects.filter(id=g)
-        movie = genre.movie_set.all().order_by('?').first()
+        movie = genre[0].movie_set.all().order_by('?').first()
         movies.append(movie)
     serializer = MovieListSerializer(movies, many=True)
     return Response(serializer.data)
