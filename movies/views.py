@@ -31,6 +31,35 @@ def movie_detail(request, movie_pk):
     serializer = MovieSerializer(movie)
     return Response(serializer.data)
 
+
+# 좋아요
+@api_view(['POST'])
+def movie_like(request, movie_pk):
+  movie = get_object_or_404(Movie, pk=movie_pk)
+  user = request.user
+  if user.like_movies.filter(pk=movie.pk).exists():
+      user.like_movies.remove(movie.pk)
+      liking = False
+      
+  else:
+      user.like_movies.add(movie.pkr)
+      liking = True
+  
+  return Response(liking)    
+
+@api_view(['POST'])
+def my_movie_like(request, my_pk):
+  user = request.user
+  data = []
+  movies = request.data
+  for movie_pk in movies:
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    serializer = MovieSerializer(movie)
+    data.append(serializer.data)
+  
+  return Response(data)
+
+
 @api_view(['GET', 'POST'])
 def review_list_create(request, movie_pk):
     if request.method == 'GET':
@@ -94,10 +123,6 @@ def line_recommend_result(request):
         movies.append(movie)
     serializer = MovieListSerializer(movies, many=True)
     return Response(serializer.data)
-    
-
-
-
     
 
 

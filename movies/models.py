@@ -23,6 +23,7 @@ class Movie(models.Model):
     overview = models.CharField(max_length=500)
     line = models.CharField(max_length=500, blank=True)
     genres = models.ManyToManyField(Genre)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies')
 
 
 class Review(models.Model):
@@ -31,4 +32,4 @@ class Review(models.Model):
     rank = models.FloatField(default=0)
     content = models.TextField()
     updated_at = models.DateTimeField(auto_now=True)
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews')
+    # like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews')
