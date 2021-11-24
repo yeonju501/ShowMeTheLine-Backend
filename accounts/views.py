@@ -1,12 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, render
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-
-from movies.models import Movie
-from .serializers import LikeSerializer, UserSerializer
+from movies.serializers.movie import MovieListSerializer
+from .serializers import ProfileSerializer, UserSerializer
 from rest_framework.permissions import AllowAny
-
+from .models import User
 # Create your views here.
 
 @api_view(['POST'])
@@ -27,13 +27,21 @@ def signup(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
-def like_movie_list_create(request):
+def like_movie_list(request):
     if request.method == 'GET':
-        movies = request.user.liked_movies.all().order_by('-popularity')
-        serializer = LikeSerializer(user=request.user, liked_movies=movies)
+        movies = request.user.like_movies.all().order_by('-popularity')
+        serializer = MovieListSerializer(movies, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = LikeSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def user_info(request):
+    user = get_object_or_404(get_user_model(), pk=request.user.pk)
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def profile(request, username):
+    user = get_object_or_404(get_user_model(), username=username)
+    serializer = ProfileSerializer(user)
+    return Response(serializer.data)
+
