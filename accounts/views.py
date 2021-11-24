@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from movies.serializers.movie import MovieListSerializer
-from .serializers import ProfileSerializer, UserSerializer
+from .serializers import ProfileSerializer, UserSerializer, SignupSerializer
 from rest_framework.permissions import AllowAny
 from .models import User
 # Create your views here.
@@ -18,7 +18,7 @@ def signup(request):
     if password != password_confirmation:
         return Response({'error' : '비밀번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
     
-    serializer = UserSerializer(data=request.data)
+    serializer = SignupSerializer(data=request.data)
 
     if serializer.is_valid(raise_exception=True):
         user = serializer.save()
