@@ -45,3 +45,15 @@ def profile(request, username):
     serializer = ProfileSerializer(user)
     return Response(serializer.data)
 
+@api_view(['POST'])
+def follow(request, user_pk):
+    if request.user.is_authenticated:
+        person = get_object_or_404(get_user_model(), pk=user_pk)
+        if person != request.user:
+            if person.followers.filter(pk=request.user.pk).exists():
+            #if request.user in person.followers.all():
+                person.followers.remove(request.user)
+            else:
+                person.followers.add(request.user)
+            return Response({'id':user_pk}, status=status.HTTP_201_CREATED)
+
