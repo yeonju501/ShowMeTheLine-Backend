@@ -7,7 +7,7 @@
 - 권연주
   - DJango API Server를 활용한 API 구현
 
-### 
+
 
 ## 2. 목표 서비스
 
