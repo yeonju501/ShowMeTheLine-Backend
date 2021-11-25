@@ -20,7 +20,12 @@ def movie_list(request):
 @api_view(['GET'])
 def bestFive(request):
     movies = Movie.objects.all().order_by('-vote_average')[:20]
-    # print(movies)
+    serializer = MovieListSerializer(movies, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def popularFive(request):
+    movies = Movie.objects.all().order_by('-popularity')[:20]
     serializer = MovieListSerializer(movies, many=True)
     return Response(serializer.data)
 
