@@ -13,16 +13,16 @@
 - 명대사 기반 영화 추천 제공
   - 메인 화면에서 사용자가 선택한 대사를 기반으로 추천을 구현함
 
-![추천1](README.assets/추천1-16378850602812.png)
+![추천1](README.assets/추천1.png)
 
-![추천결과](README.assets/추천결과-16378850670213.png)
+![추천결과](README.assets/추천결과.png)
 
 
 
 - 영화 목록 제공
   - Pagination과 검색을 포함한 영화목록을 구현함
 
-![영화목록](README.assets/영화목록-16378851282814.png)
+![영화목록](README.assets/영화목록.png)
 
 ![검색](README.assets/검색.png)
 
